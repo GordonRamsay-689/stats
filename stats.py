@@ -145,15 +145,11 @@ def boxplot(numbers):
 
     return min_n, q1, q2, q3, max_n, outliers
 
-def gauss(numbers):
-    ''' Checks if input could be normally distributed '''
-    
+def gauss(numbers):    
     mu = mean(numbers)
     sigma = stdev(numbers)
     
-
     return [mu + sigma * i for i in range(-2, 3)]
-
 
 def print_gauss(numbers):
     values = []
@@ -201,8 +197,6 @@ def main():
     get_dataset(dataset)
     dataset.sort()
 
-
-
     print(f"{LBLUE}Dataset:{RESET}", dataset)
     print(f"{LBLUE}Average:{RESET}", mean(dataset))
     print(f"{LBLUE}Median:{RESET}", median(dataset))
@@ -220,10 +214,7 @@ def main():
         print("\t\t\tWARNING! Data may not actually be evenly distributable.\n")
         print(f"{LBLUE}Gauss Curve:{RESET} {gauss_curve}")
         print_gauss(gauss_curve)
-    print("\033[38;2;10;50;200m", end='')
-        
-
-        
+    print(LBLUE, end='')
 
 if __name__ == '__main__':
     LBLUE = "\033[38;2;10;50;200m"
