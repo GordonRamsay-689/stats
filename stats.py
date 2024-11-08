@@ -194,11 +194,17 @@ def print_gauss(numbers):
         y += 4
         z += 1
 
-    adjust = 0 if top_padding > 22 else 1
-    left = " " * (x + padding + 2 - adjust)
+    if top_padding < 23:
+        l_adjust = 1
+        r_adjust = 0
+    elif top_padding > 22:
+        l_adjust = 0
+        r_adjust = 1
+
+    left = " " * (x + padding + 2 - l_adjust)
     neg2_to_neg1 = " " * (2 + z - len(values[0]) - 2)
     mid1 = " " * ((y//2) - len(values[1]) - (len(values[2]) // 2) - 3) 
-    mid2 = " " * ((y//2) - (len(values[2]) // 2) - 3) 
+    mid2 = " " * ((y//2) - (len(values[2]) // 2) - 3 - r_adjust) 
     pos1_to_pos2 = " " * (2 + z - len(values[3]) - 3)
     print(left, values[0], neg2_to_neg1, values[1], mid1, values[2], mid2, values[3], pos1_to_pos2, values[4])
 
@@ -224,7 +230,7 @@ def main():
     print('\n')
     print(f"{LBLUE}Boxplot:{RESET} {min_n}--[ {q1} ]{q2}[ {q3} ]--{max_n} \n\tOutliers: {outliers}\n")
     
-    gauss_curve = normal(1, st_dev=2)
+    gauss_curve = normal(3000, st_dev=2)
     if gauss_curve:
         print("\t\t\tWARNING! Data may not actually be evenly distributable.\n")
         print(f"{LBLUE}Gauss Curve:{RESET} {gauss_curve}")
