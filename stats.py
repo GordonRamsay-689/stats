@@ -145,9 +145,18 @@ def boxplot(numbers):
 
     return min_n, q1, q2, q3, max_n, outliers
 
-def gauss(numbers):    
-    mu = mean(numbers)
-    sigma = stdev(numbers)
+def gauss(numbers, st_dev=0):    
+    '''
+    Returns a normal distributed list of values based on the mean
+    and standard deviation of the values provided or the mean and 
+    standard deviation provided explicitly.
+
+    takes either:
+        - a list of int/float
+        - one mean as int/float and a standard deviation int/float.
+    '''
+    mu = mean(numbers) if isinstance(numbers, list) else numbers
+    sigma = stdev(numbers) if st_dev == 0 else st_dev
     
     return [mu + sigma * i for i in range(-2, 3)]
 
@@ -162,34 +171,39 @@ def print_gauss(numbers):
         length = len(num_string)
         max_length = length if length > max_length else max_length
 
-    initial_padding = 22   
+    top_padding = 22   
     if max_length > 6:
-        initial_padding += 30
+        top_padding += 30
     if max_length > 12:
-        initial_padding += 30
+        top_padding += 30
     if max_length > 15:
         for i, value in enumerate(values):
             values[i] = value[:4] + '..'
-        initial_padding = 22
+        top_padding = 22
     
+    padding = 4
     print(PURPLE)
-    print(" " * initial_padding, "__")
-    x = initial_padding - 7
+    print(" " * (top_padding + padding), "__")
+    x = top_padding - 7
     iterations = math.ceil((x) / 3)
     y = 4
     z = 3
     for i in range(iterations):
-        print(" " * x, "_" * (2 + z), " " * y, "_" * (2 + z))
+        print(" " * (x + padding), "_" * (2 + z), " " * y, "_" * (2 + z))
         x -= 3
         y += 4
         z += 1
 
-    left = " " * x
+    left = " " * (x + padding)
     neg2_to_neg1 = " " * (2 + z - 1 - len(values[0]))
     mid1 = " " * ((y//2) - len(values[1]) - (len(values[2]) // 2) - 3) 
     mid2 = " " * ((y//2) - (len(values[2]) // 2) - 3) 
     pos1_to_pos2 = " " * (2 + z - len(values[3]) - 3)
     print(left, values[0], neg2_to_neg1, values[1], mid1, values[2], mid2, values[3], pos1_to_pos2, values[4])
+
+    neg2_left = " " * (((2 + z - 1) //2) - 4 + padding)
+    print(LBLUE, end='')
+    print("2.3%", neg2_left, "13.6%")
     print(f'{RESET}\n')
     
 def main():
