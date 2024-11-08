@@ -145,7 +145,7 @@ def boxplot(numbers):
 
     return min_n, q1, q2, q3, max_n, outliers
 
-def gauss(numbers, st_dev=0):    
+def normal(numbers, st_dev=0):    
     '''
     Returns a normal distributed list of values based on the mean
     and standard deviation of the values provided or the mean and 
@@ -223,7 +223,7 @@ def main():
     print('\n')
     print(f"{LBLUE}Boxplot:{RESET} {min_n}--[ {q1} ]{q2}[ {q3} ]--{max_n} \n\tOutliers: {outliers}\n")
     
-    gauss_curve = gauss(dataset)
+    gauss_curve = normal(dataset)
     if gauss_curve:
         print("\t\t\tWARNING! Data may not actually be evenly distributable.\n")
         print(f"{LBLUE}Gauss Curve:{RESET} {gauss_curve}")
