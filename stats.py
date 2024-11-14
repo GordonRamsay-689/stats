@@ -52,7 +52,7 @@ def boxplot(numbers):
 
 def ceil(n):
     int_n = int(n)
-    return n if n == int_n else int_n + 1
+    return int_n if n == int_n else int_n + 1
 
 def get_dataset(dataset):
     print(f"{GREENBLUE}Input dataset:{RESET}")
