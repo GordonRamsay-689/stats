@@ -162,7 +162,7 @@ def print_gauss(numbers):
     left = " " * (x + padding + adjust)
     neg2_to_neg1 = " " * (2 + z - 1 - len(values[0]) - adjust)
     mid1 = " " * ((y//2) - len(values[1]) - (len(values[2]) // 2) - 3) 
-    mid2 = " " * ((y//2) - (len(values[2]) // 2) - 3 - r_adjust) 
+    mid2 = " " * ((y//2) - (len(values[2]) // 2) - 3)
     pos1_to_pos2 = " " * (2 + z - len(values[3]) - 3)
     print(left, values[0], neg2_to_neg1, values[1], mid1, values[2], mid2, values[3], pos1_to_pos2, values[4])
 
