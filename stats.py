@@ -1,65 +1,57 @@
-import math
+def babylonian_sqrt(n):
+    y = 1
+    x = abs(n)
+    
+    accuracy = 0.000001
+    while((x - y) > accuracy):
+        x = mean((x, y))
+        y = n / x
+    return x
 
-def mean(numbers):
-    return sum(numbers) / len(numbers)
-
-def median(numbers):
+def boxplot(numbers):
     length = len(numbers)
-    mid = (length // 2) - 1
-    
+    mid = length // 2
+ 
     if length % 2 == 0:
-        sum = numbers[mid] + numbers[mid + 1]
-        return sum / 2
+        lower_half = numbers[:mid]
+        upper_half = numbers[mid:]
     else:
-        return numbers[mid + 1]
+        lower_half = numbers[:mid]
+        upper_half = numbers[mid + 1:]
+
+    q1 = median(lower_half)
+    q2 = median(numbers)
+    q3 = median(upper_half)
+
+    outlier_limit = 1.5 * (q3 - q1)
+    outliers = []
+    min_n = None
+    for n in lower_half:
+        if (q2 - n) > outlier_limit:
+            outliers.append(n)
+        else:
+            min_n = n
+            break
+
+    upper_half.reverse()
+    max_n = None
+    for n in upper_half:
+        if (n - q3) > outlier_limit:
+            outliers.append(n)
+        else:
+            max_n = n
+            break
     
-def typical(numbers):
-    numbers_set = set()
-    duplicates = {}
-    for n in numbers:
-        duplicates[n] = 1
+    if not min_n:
+        min_n = numbers[0]
+    if not max_n:
+        max_n = numbers[-1]
 
-    for n in numbers:
-        length = len(numbers_set)
-        numbers_set.add(n)
+    return min_n, q1, q2, q3, max_n, outliers
 
-        if len(numbers_set) == length:
-            duplicates[n] = duplicates[n] + 1
-
-    if len(numbers_set) == len(numbers):
-        return None
-
-    typical_values = []
-    i = 0
-    for value in duplicates:
-        i += 1
-        if i == 1:
-            typical_values.append(value)
-            continue
-
-        if duplicates[value] > duplicates[typical_values[0]]:
-            typical_values.clear()
-            typical_values.append(value)
-        elif duplicates[value] == duplicates[typical_values[0]]:
-            typical_values.append(value)
-    
-    return typical_values
-
-def width(numbers):
-    return max(numbers) - min(numbers)
-
-def varians(numbers):
-    average = mean(numbers)
-    
-    sum = 0
-    for n in numbers:
-        sum += (n - average) ** 2
-    
-    return sum / (len(numbers) - 1)
-
-def stdev(numbers):
-    var = varians(numbers)
-    return math.sqrt(var)
+def ceil(n):
+    int_n = int(n)
+    return int_n if n == int_n else int_n + 1
 
 def get_dataset(dataset):
     print(f"{GREENBLUE}Input dataset:{RESET}")
@@ -104,46 +96,18 @@ def get_dataset(dataset):
     if user_in != '\n' and user_in != '':
         print()
 
-def boxplot(numbers):
+def mean(numbers):
+    return sum(numbers) / len(numbers)
+
+def median(numbers):
     length = len(numbers)
-    mid = length // 2
- 
-    if length % 2 == 0:
-        lower_half = numbers[:mid]
-        upper_half = numbers[mid:]
-    else:
-        lower_half = numbers[:mid]
-        upper_half = numbers[mid + 1:]
-
-    q1 = median(lower_half)
-    q2 = median(numbers)
-    q3 = median(upper_half)
-
-    outlier_limit = 1.5 * (q3 - q1)
-    outliers = []
-    min_n = None
-    for n in lower_half:
-        if (q2 - n) > outlier_limit:
-            outliers.append(n)
-        else:
-            min_n = n
-            break
-
-    upper_half.reverse()
-    max_n = None
-    for n in upper_half:
-        if (n - q3) > outlier_limit:
-            outliers.append(n)
-        else:
-            max_n = n
-            break
+    mid = (length // 2) - 1
     
-    if not min_n:
-        min_n = numbers[0]
-    if not max_n:
-        max_n = numbers[-1]
-
-    return min_n, q1, q2, q3, max_n, outliers
+    if length % 2 == 0:
+        sum = numbers[mid] + numbers[mid + 1]
+        return sum / 2
+    else:
+        return numbers[mid + 1]
 
 def normal(numbers, st_dev=0):    
     '''
@@ -185,7 +149,7 @@ def print_gauss(numbers):
     print(PURPLE)
     print(" " * (top_padding + padding), "__")
     x = top_padding - 7
-    iterations = math.ceil((x) / 3)
+    iterations = ceil(x / 3)
     y = 4
     z = 3
     for i in range(iterations):
@@ -194,15 +158,9 @@ def print_gauss(numbers):
         y += 4
         z += 1
 
-    if top_padding < 23:
-        l_adjust = 1
-        r_adjust = 0
-    elif top_padding > 22:
-        l_adjust = 0
-        r_adjust = 1
-
-    left = " " * (x + padding + 2 - l_adjust)
-    neg2_to_neg1 = " " * (2 + z - len(values[0]) - 2)
+    adjust = 2
+    left = " " * (x + padding + adjust)
+    neg2_to_neg1 = " " * (2 + z - 1 - len(values[0]) - adjust)
     mid1 = " " * ((y//2) - len(values[1]) - (len(values[2]) // 2) - 3) 
     mid2 = " " * ((y//2) - (len(values[2]) // 2) - 3 - r_adjust) 
     pos1_to_pos2 = " " * (2 + z - len(values[3]) - 3)
@@ -212,7 +170,55 @@ def print_gauss(numbers):
     print(LBLUE, end='')
     print("2.3%", neg2_left, "13.6%")
     print(f'{RESET}\n')
+
+def typical(numbers):
+    numbers_set = set()
+    duplicates = {}
+    for n in numbers:
+        duplicates[n] = 1
+
+    for n in numbers:
+        length = len(numbers_set)
+        numbers_set.add(n)
+
+        if len(numbers_set) == length:
+            duplicates[n] = duplicates[n] + 1
+
+    if len(numbers_set) == len(numbers):
+        return None
+
+    typical_values = []
+    i = 0
+    for value in duplicates:
+        i += 1
+        if i == 1:
+            typical_values.append(value)
+            continue
+
+        if duplicates[value] > duplicates[typical_values[0]]:
+            typical_values.clear()
+            typical_values.append(value)
+        elif duplicates[value] == duplicates[typical_values[0]]:
+            typical_values.append(value)
     
+    return typical_values
+
+def stdev(numbers):
+    var = varians(numbers)
+    return babylonian_sqrt(var)   
+
+def varians(numbers):
+    average = mean(numbers)
+    
+    sum = 0
+    for n in numbers:
+        sum += (n - average) ** 2
+    
+    return sum / (len(numbers) - 1)
+
+def width(numbers):
+    return max(numbers) - min(numbers)
+
 def main():
     dataset = []
     get_dataset(dataset)
